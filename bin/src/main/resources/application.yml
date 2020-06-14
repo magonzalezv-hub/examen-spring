@@ -1,0 +1,155 @@
+info:
+    app:
+        name: IDD CORE
+        description: Procesamiento de peticiones pendientes
+
+server:
+    servlet-path: /*
+# Para desplegar como aplicacion boot y que no entre en conflicto
+#    port: 8081
+
+spring:
+    profiles:
+        active: @activatedProperties@
+
+    http:
+        multipart:
+            max-file-size: 40000KB
+            max-request-size: 40000KB
+#    name: IDD_CORE
+#    profiles:
+#        active: devOrcl
+    jackson:
+        deserialization:
+            fail-on-unknown-properties: true
+        serialization:
+            indent-output: true
+
+## Se incluye libreria para el uso de jwt que habilita esta funcionalidad 
+## requiriendo password en cada acceso por lo que se deshabilita aqui 
+## En lugar de mantener esta propiedad indicamos en el main que no utilice estos
+## valores de seguridad
+## @SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
+#security:
+#    basic:
+#        enabled: false
+
+management:
+    security:
+        enabled: false
+    context-path: /manage
+    metrics:
+        web:
+            server:
+                auto-time-requests: true
+
+#    h2:
+#        console:
+#            enabled: true
+#            path: /h2
+
+## Keep the connection alive if idle for a long time (needed in production)
+##spring.datasource.testWhileIdle=true
+#spring.datasource.validationQuery=SELECT 1
+
+##### PARAMETROS
+
+### ENTORNO
+
+### VALIDAS
+
+# HEADERS
+endpoints:
+    apiinvoker:
+        baseurl: 'http://aadms-epd.bankia.int/apiinvoker'
+# Argumento del repositorio configurado en APIInvoker para las evidencias
+#        repositorio: veridas #Valor por defecto
+        alive: veridas_validas-alive
+        validacion:
+            root: veridas_validas-validation-crear
+            completa: veridas_validas-validation-consultarvalidacion
+            documento:
+                general: veridas_validas-document-adjuntar
+                anverso: veridas_validas-document_image_obverse-adjuntar
+                anversoflash: veridas_validas-document_image_obverse_flash-adjuntar
+                reverso: veridas_validas-document_image_reverse-adjuntar
+            anverso: veridas_validas-document_image_obverse-adjuntar
+            anversoflash: veridas_validas-document_image_obverse_flash-adjuntar
+            reverso: veridas_validas-document_image_reverse-adjuntar
+            camposdocumento: veridas_validas-validation_ocr-consultar
+            selfie: veridas_validas-validation_selfie-adjuntar
+            video: veridas_validas-validation_video-adjuntar
+            confirmacion: veridas_validas-validation-confirmar
+            # No tenemos llamada concreta de scores, pero la completa tambien los devuelve
+            scores: veridas_validas-validation_scores-consultar
+            delete: veridas_validas-validation-borrar
+            cancel: veridas_validas-validation-cancelar
+            get:
+                document:
+                    obverse_cut: veridas_validas-document_image_obverse_cut-consultar
+                    reverse_cut: veridas_validas-document_image_reverse_cut-consultar
+                    face: veridas_validas-document_image_face-consultar
+                    signature: veridas_validas-document_image_face-consultar
+
+    validas:
+        apikey:
+            name: apikey
+            value: Mrpu65Rwjf6Cqe3QpnS7nzsk73L39ymH7Ckv
+
+## RUTAS
+        baseurl: 'https://api-work.eu.veri-das.com'
+        alive: /validas/v1/alive
+        validacion:
+            root: /validas/v1/validation
+            completa: /validas/v1/validation/{id}
+            documento: /validas/v1/validation/{id}/document
+            camposdocumento: /validas/v1/validation/{id}/ocr
+            selfie: /validas/v1/validation/{id}/selfie
+            video: /validas/v1/validation/{id}/video
+            confirmacion: /validas/v1/validation/{id}/confirmation
+            scores: /validas/v1/validation/{id}/scores
+            conversion: /videoconverter/v1/video-part/final
+
+        respuesta:
+# Identificadores de scores globales implementados
+            validaciondocumentoid: Score-DocumentGlobal
+            validacionselfiefotoid: ValidasScoreSelfie
+            validacionselfievideoid: ValidasScoreVideo
+            validacionpruebavidaid: ValidasScoreLifeProof
+
+# Identificadores de links para acceso a imagenes 
+            identificadorlinkanverso: image:obverse
+            identificadorlinkanversoflash: image:obverse_flash
+            identificadorlinkreverso: image:reverse
+            identificadorlinkselfie: image:selfie
+            identificadorlinkvideo: video:selfie
+# Si se comenta admitirá todos los documentos Españoles salvo los carnets de conducir
+        documentosvalidos: NIE2003,NIE2010,NIE2011,DNI20,DNI30
+
+## EXTENSIONES SOPORTADAS
+#        extensiones:
+#            imagen: jpg,png,jpeg
+#            video: mp4,avi,webm,mov,mkv
+
+# Codigos de error controlados en funcion de la accion a realizar
+        errores:
+# Errores para reiniciar un alta. Valor por defecto null en todos
+# De momento los comentamos o dejamos vacio (para no tener conflicto con la version anterior), no hay error salvo los de not found que consideremos recuperables
+            reinicio: ''
+# Errores de no encontrado (tambien se reinicia el alta)
+            notfound: NotFoundError,NotFoundValidation
+# Errores con los que el alta se marca como no KO_TECNICO
+            irrecuperables: FormValidationError,EmptyDocumentError,imageNotProvided,EmptySelfieError,EmptyVideoError,videoNotProvided,unsupportedFormat,InvalidVideoType,videoXMLMetadataNotProvided
+# Errores de tipo de documento (requieren respuesta por el servicio invocado)
+            tipodocumento: UnknownDocumentTypeError
+
+    http:
+# Codigos de error controlados en funcion de la accion a realizar
+        errores:
+# Errores para reiniciar un alta.
+# De momento los comentamos, no hay error salvo los de not found internos de Validas que consideremos recuperables
+#            reinicio: 
+# Errores de no encontrado (tambien se reinicia el alta)
+# 403 forbidden, 408 timeout, 500 Internal Server Error, 503 Service Unavailable
+# 504 Gateway Timeout, 507 Insufficient Storage, 509 Bandwidth Limit Exceeded,
+            reintentar: '403,408,500,503,504,507,509'

@@ -1,0 +1,110 @@
+################################################################################
+## DATASOURCE 
+################################################################################
+spring:
+    datasource:
+## Configurado en JBoss
+#        jndi-name: java:jboss/datasources/oids
+## PARAMETRIZACION EXTERNA
+#        url: ${db_url} #jdbc:oracle:thin:@localhost:1521:xe
+#        driverClassName: ${db_driver_classname} #oracle.jdbc.OracleDriver
+#        username: ${db_usr} #system
+#        password: ${db_pswrd} #oracle
+## Conexion directa
+        url: jdbc:oracle:thin:@localhost:1521:xe
+        driverClassName: oracle.jdbc.OracleDriver
+        username: idd
+        password: idd
+#        url: jdbc:oracle:thin:@ORA10-DESA:1593/oradaa_desa
+#        driver: oracle.jdbc.xa.client.OracleXADataSource
+#        username: oi2_d_tx
+#        password: oi2_d_tx
+    jpa:
+        hibernate:
+            ddl-auto: none
+        database-platform: org.hibernate.dialect.Oracle10gDialect
+
+
+## Keep the connection alive if idle for a long time (needed in production)
+##spring.datasource.testWhileIdle=true
+#spring.datasource.validationQuery=SELECT 1
+
+################################################################################
+## Configuración integración con API Veridas
+################################################################################
+
+# Valores para el proxy
+# Si se indica vacio no se tiene en cuenta proxy
+entorno:
+    proxy:
+#        hostname: proxy.cm.es
+#        hostname: proxy.indra.es
+#        port: 8080
+#        username: A196175
+#        username: asgomiz
+#        username: jgilardi
+#        pass: asdf
+
+# Listado de origenes separados por coma en el orden de preferencia (los no 
+# listados se mostraran sin orden especifico)
+    altas:
+        origenes: QUIOSCO,ONLINE
+# Valor maximo en milisegundos con el que considerar que un proceso de alta 
+# todavía está en proceso. Valor por defecto 1800000 = 30 minutos (30*60*1000)
+        sesion:
+            tiempomaximo: 1800000
+# Valor maximo en milisegundos con el que permitir un cambio de operador en el 
+# bloqueo. Valor por defecto 900000 = 15 minutos (15*60*1000)
+        operador:
+            tiempobloqueo: 900000
+
+## Directorio conpartido para el almacenaje de las evidencias (barra final)
+    evidencias:
+        ruta:
+## PARAMETRIZACION EXTERNA
+#           local: ${evid_path} 
+#           local: C:/Users/asanz/tmp/evidencias/
+## Ruta del sistema Windows
+#            local: C:/Users/A196175/tmp/evidencias/
+#            archivado: D:/Users/A196175/tmp/evidenciasResueltas/
+            local: D:/tmp/evidencias/
+            archivado: D:/tmp/evidenciasResueltas/
+
+# Executor para el procesado de evidencias en hilos independientes
+## DESACTIVADO AL PASAR AL IMPORTER
+## Los metodos que lanzan la ejecucion estan comentados
+# Valores por defecto (corepoolsize=10,maxpoolsize=20,capacidad=50,keepalive=45000(milisegundos))
+#    executor:
+#        altas:
+#            corepoolsize=10
+#            maxpoolsize=20
+#            capacidad=50
+#            keepalive=45000
+            
+            
+################################################################################
+## LOGGER
+################################################################################     
+logging:
+## PARAMETRIZACION EXTERNA
+#    file: ${log_path} #C:/Users/asanz/tmp/idd-core.log
+#    file: ${idd.log.path}
+## Ruta del sistema windows
+#    file: C:/Users/A196175/tmp/idd-core.log
+    file: D:/tmp/idd-core.log
+    pattern:
+        console: "%d %-5level %logger : %msg%n"
+        file: "%d %-5level [%thread] %logger : %msg%n"
+    level:
+        root: ERROR
+        com.idd: TRACE
+        #org.springframework.web: DEBUG
+        #org.hibernate: ERROR               
+# Debug de queries
+#        org:
+#            hibernate:
+#                SQL: DEBUG
+#                type:
+#                    descriptor:
+#                        sql:
+#                            BasicBinder: TRACE

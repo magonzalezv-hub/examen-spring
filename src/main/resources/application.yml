@@ -1,0 +1,53 @@
+server:
+    port: 8083
+
+spring:
+    servlet:
+        multipart:
+            max-file-size: 4MB
+            max-request-size: 4MB
+
+    rabbitmq:
+        host: localhost
+        port: 5672
+        addresses: localhost:5672
+        username: guest
+        password: guest
+        virtual-host: /
+        dynamic: true    
+
+ms:
+    dossier:
+        baseURL: http://localhost:8082
+        basePath: /dossierDocument
+        documentPATH: /expedientes/documents
+        document: 
+            actionPATH: /expedientes/documents/actions
+    cipher:
+        baseURL:  http://localhost:9080
+        contextPath: /cipher
+        uploadPath: /upload-files
+        downloadPath: /download-files
+        
+doc:
+    santander:
+        exchange: doc.santander.exchange
+        queue: doc.santander.queue
+        routingkey: doc.santander.routingkey
+            
+entorno:
+    evidencias:
+        ruta:
+            local: D:\tmp 
+
+#################################################################################
+### LOGGER
+#################################################################################     
+#logging:
+#    file: D:/tmp/ms-core-document.log
+#    pattern:
+#        console: "%d %-5level %logger : %msg%n"
+#        file: "%d %-5level [%thread] %logger : %msg%n"
+#    level:
+#        root: ERROR
+#        mx.santander: TRACE

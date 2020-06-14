@@ -1,0 +1,72 @@
+################################################################################
+## DATASOURCE 
+################################################################################
+spring:
+    datasource:
+        jndi-name: java:jboss/datasources/oids
+    jpa:
+        hibernate:
+            ddl-auto: none
+        database-platform: org.hibernate.dialect.Oracle10gDialect
+
+
+## Keep the connection alive if idle for a long time (needed in production)
+##spring.datasource.testWhileIdle=true
+#spring.datasource.validationQuery=SELECT 1
+
+################################################################################
+## Configuración integración con API Veridas
+################################################################################
+
+# Valores para el proxy
+# Si se indica vacio no se tiene en cuenta proxy
+entorno:
+    proxy:
+#        hostname: proxy.cm.es
+        port: 8080
+#        username: A196176
+#        pass: asdf
+
+# Listado de origenes separados por coma en el orden de preferencia (los no 
+# listados se mostraran sin orden especifico)
+    altas:
+        origenes: QUIOSCO,ONLINE
+# Valor maximo en milisegundos con el que considerar que un proceso de alta 
+# todavía está en proceso. Valor por defecto 1800000 = 30 minutos (30*60*1000)
+        sesion:
+            tiempomaximo: 1800000
+# Valor maximo en milisegundos con el que permitir un cambio de operador en el 
+# bloqueo. Valor por defecto 900000 = 15 minutos (15*60*1000)
+        operador:
+            tiempobloqueo: 900000
+
+## Directorio conpartido para el almacenaje de las evidencias (barra final)
+    evidencias:
+        ruta:
+            local: /mnt/fs_servicios/bponboar/datos/usuarios/bponboar/evidencias/
+            archivado: /mnt/fs_servicios/bponboar/datos/usuarios/bponboar/evidenciasResueltas/
+
+# Executor para el procesado de evidencias en hilos independientes
+## DESACTIVADO AL PASAR AL IMPORTER
+## Los metodos que lanzan la ejecucion estan comentados
+# Valores por defecto (corepoolsize=10,maxpoolsize=20,capacidad=50,keepalive=45000(milisegundos))
+#    executor:
+#        altas:
+#            corepoolsize=10
+#            maxpoolsize=20
+#            capacidad=50
+#            keepalive=45000
+
+# HEADERS
+endpoints:
+    validas:
+        apikey:
+            name: apikey
+            value: Mrpu65Rwjf6Cqe3QpnS7nzsk73L39ymH7Ckv
+
+################################################################################
+## LOGGER
+################################################################################
+
+logging:
+    config: file:/mnt/fs_servicios/bponboar/datos/usuarios/bponboar/config/core/logback.xml

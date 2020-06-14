@@ -1,0 +1,27 @@
+package mx.santander.idd.core.config;
+
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.client.RestTemplate;
+
+
+/**
+ * OClase encargada de manejar el RestTemplate del MS
+ * @author Mintsait
+ *
+ */
+@Configuration
+
+public class AppConfig {
+	
+	@Bean
+	public RestTemplate restTemplate() {
+		return new RestTemplate();
+	}
+	
+}
