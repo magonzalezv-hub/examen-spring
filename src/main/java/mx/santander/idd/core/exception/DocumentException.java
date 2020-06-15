@@ -62,6 +62,9 @@ public class DocumentException extends Exception{
 			case MSG_ERROR_EN_SERVIDOR:
 				httpstatus =   HttpStatus.INTERNAL_SERVER_ERROR;
 				break;
+			case MSG_ERROR_DE_CONEXION:
+				httpstatus = HttpStatus.SERVICE_UNAVAILABLE;
+				break;
 			default:
 				httpstatus =   HttpStatus.INTERNAL_SERVER_ERROR;
 		}

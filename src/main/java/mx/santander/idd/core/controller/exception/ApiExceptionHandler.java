@@ -1,4 +1,4 @@
-package mx.santander.idd.core.controller.exception;
+	package mx.santander.idd.core.controller.exception;
 
 import org.owasp.encoder.Encode;
 import org.springframework.http.HttpStatus;
